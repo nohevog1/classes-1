@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>class 3 - states</title>
+
+<style>
+h1 {
+  font-family: sans-serif;
+  color: #000;
+  text-align: center;
+  font-size: 25px;
+  }
+body {
+  position: absolute;
+  margin: 0px;
+}
+  
+svg {
+  background-color: #282829;
+} 
+  
+path.state {
+  fill: #4B4C4D;
+  stroke: #282829;
+}
+path.quake1, circle.quake1 {
+  fill: LimeGreen;
+  fill-opacity: 0.6;
+}
+path.quake2, circle.quake2 {
+  fill: Yellow;
+  fill-opacity: 0.6;
+}
+path.quake3, circle.quake3 {
+  fill: DarkOrange;
+  fill-opacity: 0.9;
+}  
+path.quake4, circle.quake4 {
+  fill: Red;
+  fill-opacity: 0.9;
+}
+  
+  
+</style>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.js"></script>
+
+
+<h1> Earthquakes in the Past 7 Days by Magnitude </h1>
+<body>
+<script>
+// Set SVG size
+var width = 960, height = 500;
+  
+// Global variable for state data
+var state_data;
+// Global variable for USGS data
+var usgs_data;
+// Create SVG element
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+// Add layer one (US States) to SVG
+var layer1 = svg.append("g");
+// Add layers (US Earthquakes) to SVG
+var layer2 = svg.append("g");
+var layer3 = svg.append("g");
+var layer4 = svg.append("g");
+var layer5 = svg.append("g");
+    
+// Add coordinate information to the body
+var info = d3.select("body").append("div")
+    .attr("class", "info");
+// Set the map projection
+var projection = d3.geoAlbersUsa();
+// Set geographic path generator
+var path = d3.geoPath()
+    .pointRadius(3.5)
+    .projection(projection);
+  
+// US Basemap
+var US_Base = "https://tatornator12.github.io/class-03/us.json"
+// USGS Real-Time Earthquake Feed
+var usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+// Create an Ordinal Legend          
+var ordinal = d3.scaleOrdinal()
+  .domain(["1.0 - 2.0", "2.0 - 3.0", "3.0 - 4.0", "4.0+"])
+  .range([ "rgb(50, 205, 50)", "rgb(255, 255, 0)", "rgb(255, 140, 0)", "rgb(255, 0, 0)"]);
+var svg2 = d3.select("svg").append("svg")
+  .attr("x", 825)
+  .attr("y", 300);
+svg2.append("g")
+  .attr("class", "legendOrdinal")
+  .attr("transform", "translate(20,20)")
+  .attr("fill", "white");
+var legendOrdinal = d3.legendColor()
+  .shape("path", d3.symbol().type(d3.symbolCircle).size(150)())
+  .shapePadding(10)
+  .title("Magnitude")
+  .scale(ordinal);
+svg.select(".legendOrdinal")
+  .call(legendOrdinal);
+// Read and plot the US States
+d3.json(US_Base, plotStates);
+function plotStates(error, json) {
+  
+  // Create array of GeoJSON features -- this defines the global variable "state_data"
+  state_data = json.objects.us.geometries.map(
+    function(d) { 
+      return topojson.feature(json, d);
+    })
+  
+  // Read and plot the US Earthquakes
+  d3.json(usgs, plotQuakes);
+  function plotQuakes(error, json) {
+  
+    // Assign the json to a global variable "usgs_data"
+    usgs_data = json;
+    
+    var features1 = usgs_data.features.filter(function(d) {
+      return (d.properties.mag >= 1.0) && (d.properties.mag < 2.0)
+    });
+    
+    var features2 = usgs_data.features.filter(function(d) {
+      return (d.properties.mag >= 2.0) && (d.properties.mag < 3.0)
+    });
+  
+    var features3 = usgs_data.features.filter(function(d) {
+      return (d.properties.mag >= 3.0) && (d.properties.mag < 4.0)
+    });
+    
+    var features4 = usgs_data.features.filter(function(d) {
+      return (d.properties.mag >= 4.0)
+    });
+    
+    // Plot the earthquakes
+    layer2.selectAll("path.quake1")
+        .data(features1)
+      .enter().append("path")
+        .attr("class", "quake1")
+        .attr("d", path)
+    
+    layer3.selectAll("path.quake2")
+        .data(features2)
+      .enter().append("path")
+        .attr("class", "quake2")
+        .attr("d", path)
+    
+    layer4.selectAll("path.quake3")
+        .data(features3)
+      .enter().append("path")
+        .attr("class", "quake3")
+        .attr("d", path)
+    
+    layer5.selectAll("path.quake4")
+        .data(features4)
+      .enter().append("path")
+        .attr("class", "quake4")
+        .attr("d", path)
+ 
+  }
+  
+  // Plot the states
+  layer1.selectAll("path")
+      .data(state_data)
+    .enter()
+      .append("path")
+      .attr("class", "state")
+      .attr("d", path);
+}
+  
+</script>
