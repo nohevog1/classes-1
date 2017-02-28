@@ -8,4 +8,4 @@ This repository overlays the USGS real-time Earthquakes data feed from the past 
 
 #### Open in JSBin
 
-* <http://jsbin.com/dixedu/1/edit?html,output>
+* <http://jsbin.com/facari/1/edit?html,output>
