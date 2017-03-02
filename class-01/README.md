@@ -6,4 +6,4 @@ This project is also available on [bl.ocks.org](https://bl.ocks.org/tatornator12
 
 #### GitHub project site
 
-* <https://tatornator12.github.io/class/class-01/>
+* <https://tatornator12.github.io/classes/class-01/>
