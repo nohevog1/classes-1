@@ -4,7 +4,7 @@ This repository overlays the USGS real-time Earthquakes data feed from the past 
 
 #### GitHub project site
 
-* <https://tatornator12.github.io/class/class-03/>
+* <https://tatornator12.github.io/classes/class-03/>
 
 #### Open in JSBin
 
