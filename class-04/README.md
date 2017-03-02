@@ -6,7 +6,7 @@ This repository modifies the us_earthquakes map from the class-03 project by:
 
 #### GitHub project site
 
-* <https://tatornator12.github.io/class/class-04/>
+* <https://tatornator12.github.io/classes/class-04/>
 
 #### Open in JSBin
 
