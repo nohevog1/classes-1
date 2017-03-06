@@ -10,4 +10,4 @@ This repository modifies the us_earthquakes map from the class-03 project by:
 
 #### Open in JSBin
 
-* <https://jsbin.com/lecidun/1/edit?html,output>
+* <https://jsbin.com/vigiwe/1/edit?html,output>
