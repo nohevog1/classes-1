@@ -1,6 +1,6 @@
 # Final Project
 
-Work in progres...
+Work in progress...
 
 #### JSBin Links
 
