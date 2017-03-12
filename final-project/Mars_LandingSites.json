@@ -1,0 +1,236 @@
+{
+  "type" : "FeatureCollection",
+  "crs" : {
+    "type" : "name",
+    "properties" : {
+      "name" : "ESRI:104905"
+    }
+  },
+  "features" : [
+    {
+      "type" : "Feature",
+      "id" : 0,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            -158.09429997544871,
+            -45.041900049539777
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 0,
+        "ID" : 1,
+        "NAME" : "Mars 2",
+        "X_COORD" : -158.0943,
+        "Y_COORD" : -45.041899999999998,
+        "FULL_NAME" : "Mars 2 Landing Site",
+        "NSSDC_ID" : "1971-045A",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1971-045A",
+        "COUNTRY" : "Russian",
+        "YEAR" : 1971
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 1,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            -19.452799942045658,
+            -23.920299959309517
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 1,
+        "ID" : 2,
+        "NAME" : "Mars 6",
+        "X_COORD" : -19.4528,
+        "Y_COORD" : -23.920300000000001,
+        "FULL_NAME" : "Mars 6 Landing Site",
+        "NSSDC_ID" : "1973-052A",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1973-052A",
+        "COUNTRY" : "Russian",
+        "YEAR" : 1973
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 2,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            -47.950700055273302,
+            22.457088414234988
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 2,
+        "ID" : 3,
+        "NAME" : "Viking 1",
+        "X_COORD" : -47.950699999999998,
+        "Y_COORD" : 22.457090000000001,
+        "FULL_NAME" : "Viking 1 Landing Site",
+        "NSSDC_ID" : "1975-075C",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1975-075C",
+        "COUNTRY" : "American",
+        "YEAR" : 1975
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 3,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            133.73899999829803,
+            47.932541383284274
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 3,
+        "ID" : 4,
+        "NAME" : "Viking 2",
+        "X_COORD" : 133.739,
+        "Y_COORD" : 47.932540000000003,
+        "FULL_NAME" : "Viking 2 Landing Site",
+        "NSSDC_ID" : "1975-083C",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1975-083C",
+        "COUNTRY" : "American",
+        "YEAR" : 1975
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 4,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            -33.252799950893234,
+            19.260767168212197
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 4,
+        "ID" : 5,
+        "NAME" : "Mars Pathfinder",
+        "X_COORD" : -33.252800000000001,
+        "Y_COORD" : 19.260770000000001,
+        "FULL_NAME" : "Mars Pathfinder Landing Site",
+        "NSSDC_ID" : "1996-068A",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=1996-068A",
+        "COUNTRY" : "American",
+        "YEAR" : 1996
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 5,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            175.47290004390231,
+            -14.569200049070162
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 5,
+        "ID" : 6,
+        "NAME" : "MER Spirit",
+        "X_COORD" : 175.47290000000001,
+        "Y_COORD" : -14.5692,
+        "FULL_NAME" : "MER Spirit Landing Site",
+        "NSSDC_ID" : "2003-027A",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=2003-027A",
+        "COUNTRY" : "American",
+        "YEAR" : 2003
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 6,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            -5.5265999406482251,
+            -1.9461999377002712
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 6,
+        "ID" : 7,
+        "NAME" : "MER Opportunity",
+        "X_COORD" : -5.5266000000000002,
+        "Y_COORD" : -1.9461999999999999,
+        "FULL_NAME" : "MER Opportunity Landing Site",
+        "NSSDC_ID" : "2003-032A",
+        "WEB_LINK" : "http://nssdc.gsfc.nasa.gov/database/MasterCatalog?sc=2003-032A",
+        "COUNTRY" : "American",
+        "YEAR" : 2003
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 7,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            -125.74922203656644,
+            68.218830003656961
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 7,
+        "ID" : 8,
+        "NAME" : "Phoenix",
+        "X_COORD" : -125.74921999999999,
+        "Y_COORD" : 68.218829999999997,
+        "FULL_NAME" : "Phoenix Landing Site",
+        "NSSDC_ID" : "n/a",
+        "WEB_LINK" : "http://www.nasa.gov/mission_pages/phoenix/main",
+        "COUNTRY" : "American",
+        "YEAR" : 2008
+      }
+    },
+    {
+      "type" : "Feature",
+      "id" : 8,
+      "geometry" : {
+        "type" : "MultiPoint",
+        "coordinates" : [
+          [
+            137.43999999999997,
+            -4.590000000000015
+          ]
+        ]
+      },
+      "properties" : {
+        "FID" : 8,
+        "ID" : 0,
+        "NAME" : "MSL Curiosity",
+        "X_COORD" : 137.44,
+        "Y_COORD" : -4.5899999999999999,
+        "FULL_NAME" : "MSL Curiosity Landing Site (prelim)",
+        "NSSDC_ID" : "n/a",
+        "WEB_LINK" : "http://www.nasa.gov/mission_pages/msl/",
+        "COUNTRY" : "American",
+        "YEAR" : 2012
+      }
+    }
+  ]
+}
