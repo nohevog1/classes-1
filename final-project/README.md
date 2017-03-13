@@ -1,8 +1,7 @@
 # Final Project
 
-Work in progress...
+This project is a work in progress...
 
-#### JSBin Links
+#### JSBin Link
 
-* D3.js (version 3) <https://jsbin.com/lusaki/edit?html,output>
-* D3.js (version 4) <https://jsbin.com/dehiqiq/edit?html,output>
+* <https://jsbin.com/dehiqiq/edit?html,output>
