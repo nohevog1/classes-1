@@ -20,9 +20,31 @@ svg {
     bottom 0;
 }  
   
-#landing_sites {
-    fill: crimson;    
+.landing_sites {
+    fill: crimson;
+    stroke: #fff;
 }
+  
+.landing_sites:hover {
+    fill: steelblue;    
+}
+  
+div.tooltip {   
+  position: absolute;     
+  text-align: left;
+  vertical-align: top;   
+  width: 110px;                  
+  height: 45px;                 
+  padding: 5px; 
+  color: #000000;          
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 50%;
+  background: #FFF;
+  box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4);
+  border: 2px;  
+  border-radius: 2px;  
+} 
   
 </style>
 <body>
@@ -31,9 +53,9 @@ svg {
   <script src="https://tatornator12.github.io/classes/final-project/versor.js"></script>
 <script>
   
-var width = 960, //Math.max(960, window.innerWidth),
-    height = 500; //Math.max(500, window.innerHeight);
-
+var width = Math.max(960, window.innerWidth),
+    height = Math.max(500, window.innerHeight);
+  
 // Append the canvas element to the container div
 var canvas = d3.select("body").append("canvas")
    .attr("width", width)
@@ -43,6 +65,11 @@ var canvas = d3.select("body").append("canvas")
 var svg = d3.select("body").append("svg")
    .attr("width", width)
    .attr("height", height);
+  
+// Define the tooltip for hover-over info windows
+var div = d3.select("body").append("div")   
+  	.attr("class", "tooltip")               
+  	.style("opacity", 0);
   
 var context = canvas.node().getContext("2d");
   
@@ -129,8 +156,22 @@ d3.json(Landing_Sites, function plotSites(error, json) {
     svg.selectAll("path")
         .data(sites)
       .enter().append("path")
-        .attr("id", "landing_sites")
-        .attr("d", path);
+        .attr("class", "landing_sites")
+        .attr("d", path)
+        .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<u>" + "<font size = 2>" + d.properties.NAME + "</font>" + "</u>" + "<br/>" + "<br/>" + "<br/>" + d.properties.COUNTRY + ", " + d.properties.YEAR + "<br/>" + "<br/>" + "<br/>" + '<a href= "' + d.properties.WEB_LINK + '" >' + "More Info" + "</a>")
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(2000)
+            .style("opacity", 0);
+        });       
   }
   
 });
