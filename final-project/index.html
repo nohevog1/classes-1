@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Final Project</title>
+<style>
+  
+canvas {
+    background-color: black;
+}  
+  
+svg {
+    position: absolute;
+    top: 0;
+    bottom 0;
+}  
+  
+#landing_sites {
+    fill: crimson;    
+}
+  
+</style>
+<body>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <script src="https://tatornator12.github.io/classes/final-project/versor.js"></script>
+<script>
+  
+var width = 960, //Math.max(960, window.innerWidth),
+    height = 500; //Math.max(500, window.innerHeight); 
+
+// Append the canvas element to the container div
+var canvas = d3.select("body").append("canvas")
+   .attr("width", width)
+   .attr("height", height);
+  
+// Append the svg element to the container div
+var svg = d3.select("body").append("svg")
+   .attr("width", width)
+   .attr("height", height);
+
+var context = canvas.node().getContext("2d");
+  
+// Create and configure the Equirectangular projection
+var equirectangular = d3.geoEquirectangular()
+    .scale(width / (2 * Math.PI))
+    .translate([width / 2, height / 2]);
+  
+// Create and configure the Orthographic projection
+var orthographic = d3.geoOrthographic()
+   .scale(Math.sqrt(2) * height / Math.PI)
+   .translate([width / 2, height / 2])
+   .precision(.1);
+  
+// Set the path
+var path = d3.geoPath()
+    .projection(orthographic);
+  
+// Call the drag behaviors  
+canvas.call(d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged));
+  
+svg.call(d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged));
+ 
+// Create a render for projection rotation
+var render = function() {},
+    v0, // Mouse position in Cartesian coordinates at start of drag gesture.
+    r0, // Projection rotation as Euler angles at start.
+    q0; // Projection rotation as versor at start.
+  
+// Create a render for projection rotation
+var render2 = function() {},
+    v0, // Mouse position in Cartesian coordinates at start of drag gesture.
+    r0, // Projection rotation as Euler angles at start.
+    q0; // Projection rotation as versor at start.
+
+// Create a drag start function that refers to the versor.js library
+function dragstarted() {
+    v0 = versor.cartesian(orthographic.invert(d3.mouse(this)));
+    r0 = orthographic.rotate();
+    q0 = versor(r0);
+  
+   //Update the map's path
+   path = d3.geoPath()
+     .projection(orthographic);
+  
+   d3.selectAll("path")
+     .attr("d", path);
+  }
+
+// Create a dragged function that refers to the versor.js library
+function dragged() {
+    var v1 = versor.cartesian(orthographic.rotate(r0).invert(d3.mouse(this))),
+        q1 = versor.multiply(q0, versor.delta(v0, v1)),
+        r1 = versor.rotation(q1);
+    orthographic.rotate(r1);
+    render();
+    render2();
+  
+   //Update the map's path
+   path = d3.geoPath()
+     .projection(orthographic);
+  
+   d3.selectAll("path")
+     .attr("d", path);
+  }
+  
+// Set the source of the GeoJSON
+// These are landing coordinates for "successful" landers on Mars
+var Landing_Sites = "https://tatornator12.github.io/classes/final-project/Mars_LandingSites.json";
+
+// Plot the landing sites
+d3.json(Landing_Sites, function plotSites(error, json) {
+  if (error) throw error;
+      
+  //Set the second render on the orthographic projection of the SVG data points
+  render2 = function() {
+
+    var sites = json.features;
+    
+    svg.selectAll("path")
+        .data(sites)
+      .enter().append("path")
+        .attr("id", "landing_sites")
+        .attr("d", path);
+  }
+  
+});
+  
+// Create the image element
+var image = new Image(width, height);
+image.crossOrigin = "Anonymous";
+image.onload = onLoad;
+image.src = 'https://tatornator12.github.io/classes/final-project/32908689360_24792ca036_k.jpg';
+    
+// Copy the image to the canvas context
+function onLoad() {
+
+    // Copy the image to the canvas area
+    context.drawImage(image, 0, 0, image.width, image.height);
+
+    // Reads the source image data from the canvas context
+    var sourceData = context.getImageData(0, 0, image.width, image.height).data;
+
+    // Creates an empty target image and gets its data
+    var target = context.createImageData(image.width, image.height),
+        targetData = target.data;
+  
+  
+    //Set the first render created earlier to the orthographic projection of the image
+    render = function() {   
+      // Iterate in the target image
+      for (var x = 0, w = image.width; x < w; x += 1) {
+        for (var y = 0, h = image.height; y < h; y += 1) {
+
+            // Compute the geographic coordinates of the current pixel
+            var coords = orthographic.invert([x, y]);
+
+         
+            if ( (Math.abs(x - orthographic(coords)[0]) < 0.5 ) && (Math.abs(y - orthographic(coords)[1]) < 0.5 ) ) {
+                
+              // Source and target image indices
+              var targetIndex,
+                  sourceIndex,
+                  pixels;
+
+              // Check if the inverse projection is defined
+              if ((!isNaN(coords[0])) && (!isNaN(coords[1]))) {
+
+                  // Compute the source pixel coordinates
+                  pixels = equirectangular(coords);
+
+                  // Compute the index of the red channel
+                  sourceIndex = 4 * (Math.floor(pixels[0]) + w * Math.floor(pixels[1]));
+                  sourceIndex = sourceIndex - (sourceIndex % 4);
+
+                  targetIndex = 4 * (x + w * y);
+                  targetIndex = targetIndex - (targetIndex % 4);
+          
+                  // Copy the red, green, blue and alpha channels
+                  targetData[targetIndex]     = sourceData[sourceIndex];
+                  targetData[targetIndex + 1] = sourceData[sourceIndex + 1];
+                  targetData[targetIndex + 2] = sourceData[sourceIndex + 2];
+                  targetData[targetIndex + 3] = sourceData[sourceIndex + 3];
+              }
+            }
+          
+          }
+
+     }
+  
+      
+    // Clear the canvas element and copy the target image
+    context.clearRect(0, 0, image.width, image.height);
+    context.putImageData(target, 0, 0);
+      
+  }
+    
+  render();
+  render2();
+}
+  
+  
+</script>
