@@ -5,7 +5,7 @@ the map staticly zooms in on the state of Oklahoma.
 
 #### GitHub Project Site
 
-* <https://tatornator12.github.io/classes/class-07/index.html>
+* <https://tatornator12.github.io/classes/class-07/>
 
 #### JSBin Link
 
