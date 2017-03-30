@@ -39,7 +39,7 @@ var path = d3.geoPath()
     .projection(projection);
    
 var usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-var url = "https://umbcvis.github.io/classes/class-03/us.json"
+var url = "https://tatornator12.github.io/classes/class-04/us.json"
 
 // Plot the states data layer on a tile layer
 d3.json(url, plotStates);
