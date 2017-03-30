@@ -5,8 +5,8 @@ the map staticly zooms in on the state of Oklahoma.
 
 #### GitHub Project Site
 
-*<>
+* <>
 
 #### JSBin Link
 
-*<https://jsbin.com/dezocow/4/edit?html,output>
+* <https://jsbin.com/dezocow/4/edit?html,output>
