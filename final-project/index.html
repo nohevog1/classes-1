@@ -53,8 +53,11 @@ div.tooltip {
   <script src="https://tatornator12.github.io/classes/final-project/versor.js"></script>
 <script>
   
-var width = Math.max(960, window.innerWidth),
-    height = Math.max(500, window.innerHeight);
+var width = 1000, //Math.max(1000, window.innerWidth),
+    height = 500; //Math.max(500, window.innerHeight);
+  
+var transform = d3.zoomIdentity;
+
   
 // Append the canvas element to the container div
 var canvas = d3.select("body").append("canvas")
@@ -80,7 +83,7 @@ var equirectangular = d3.geoEquirectangular()
   
 // Create and configure the Orthographic projection
 var orthographic = d3.geoOrthographic()
-   .scale(Math.sqrt(2) * height / Math.PI)
+   .scale((Math.sqrt(2) * height / Math.PI))
    .translate([width / 2, height / 2])
    .precision(.1);
   
@@ -97,6 +100,30 @@ svg.call(d3.drag()
     .on("start", dragstarted)
     .on("drag", dragged));
  
+canvas.call(d3.zoom()
+    .scaleExtent([1 / 2, 8])
+    .on("zoom", zoomed));
+  
+svg.call(d3.zoom()
+    .scaleExtent([1 / 2, 8])
+    .on("zoom", zoomed));
+  
+function zoomed() {
+  transform = d3.event.transform;
+    
+  context.save();
+  context.clearRect(0, 0, image.width, image.height);
+  context.translate(transform.x, transform.y);
+  context.scale(transform.k, transform.k);
+  onLoad();
+  context.fill();
+  context.restore();
+  
+  svg.selectAll("path")
+      .attr("transform", transform);
+}
+
+  
 // Create a render for projection rotation
 var render = function() {},
     v0, // Mouse position in Cartesian coordinates at start of drag gesture.
