@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+#states {
+  fill: none;
+  stroke: black;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+}
+
+#quakes {
+  fill: crimson;
+  fill-opacity: 0.6;
+}
+  
+.info {
+  font-family: sans-serif;
+  color: #000;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+  
+</style>
+<svg></svg>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="//d3js.org/d3-tile.v0.0.min.js"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="https://tatornator12.github.io/classes/class-09/d3-tile.js"></script>
+<script>
+
+var pi = Math.PI,
+    tau = 2 * pi;
+  
+var width = Math.max(960, window.innerWidth),
+    height = Math.max(500, window.innerHeight);
+
+var projection = d3.geoMercator()
+    .scale(1 / tau)
+    .translate([0, 0]);
+  
+var path = d3.geoPath()
+    .projection(projection);
+  
+var tile = d3.tile()
+    .size([width, height])
+    .wrap(true);
+  
+var zoom = d3.zoom()
+    .scaleExtent([1 << 11, 1 << 14])
+    .on("zoom", zoomed);
+  
+var svg = d3.select("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", mousemoved);
+  
+// Add a <div> element to label the mouse position
+var info = d3.select("body").append("div")
+    .attr("class", "info");
+  
+var raster = svg.append("g");
+  
+var vector = svg.append("path");
+  
+var vector2 = svg.append("g");
+
+var usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+var url = "https://umbcvis.github.io/classes/class-03/us.json";
+      
+d3.queue()
+  .defer(d3.json, url)
+  .defer(d3.json, usgs)
+  .await(ready);
+  
+function ready(error, us, json) {
+  if (error) throw error;
+    
+  var quakes = json.features;
+  
+  // Plot the state boundaries
+  vector
+    .attr("id", "states")
+    .datum(topojson.mesh(us, us.objects.us))
+    .attr("d", path);
+    
+  var center = projection([-98.5, 39.5]);
+  
+  // Apply a zoom transform equivalent to projection.{scale,translate,center}.
+  svg
+      .call(zoom)
+      .call(zoom.transform, d3.zoomIdentity
+          .translate(width / 2, height / 2)
+          .scale(1 << 12)
+          .translate(-center[0], -center[1]))
+  
+  // Plot the earthquakes
+  vector2.selectAll(".quake")
+      .data(quakes)
+   .enter().append("path")
+      .attr("id", "quakes")
+      .attr("d", path);
+  
+}
+
+
+function zoomed() {
+  var transform = d3.event.transform;
+
+  var tiles = tile
+      .scale(transform.k)
+      .translate([transform.x, transform.y])
+      ();
+
+  projection
+      .scale(transform.k / tau)
+      .translate([transform.x, transform.y]);
+    
+  path = d3.geoPath()
+     .projection(projection);
+  
+  d3.selectAll("path")
+     .attr("d", path);
+    
+  var image = raster
+      .attr("transform", stringify(tiles.scale, tiles.translate))
+    .selectAll("image")
+    .data(tiles, function(d) { return d; });
+
+  image.exit().remove();
+
+  image.enter().append("image")
+      .attr("xlink:href", function(d) { return "http://" + "abc"[d[1] % 3] + ".tile.openstreetmap.org/" + d[2] + "/" + d[0] + "/" + d[1] + ".png"; })
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y; })
+      .attr("width", 256)
+      .attr("height", 256);
+}
+
+function stringify(scale, translate) {
+  var k = scale / 256, r = scale % 1 ? Number : Math.round;
+  return "translate(" + r(translate[0] * scale) + "," + r(translate[1] * scale) + ") scale(" + k + ")";
+}
+
+function mousemoved() {
+  info.text(formatLocation(projection.invert(d3.mouse(this)), projection.scale()));
+}
+  
+// Format the text that will be displayed in the the <div> element on the map
+function formatLocation(p, k) {
+  var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
+  return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
+       + (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
+} 
+ 
+</script>
