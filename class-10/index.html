@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  margin: 0;
+}
+  
+svg {
+    position: absolute;
+    top: 0;
+    bottom 0;
+    z-index: 1;
+}  
+  
+.map {
+  position: relative;
+  overflow: hidden;
+}
+
+.layer {
+  position: absolute;
+  will-change: transform;
+}
+  
+.tile {
+  position: absolute;
+  width: 256px;
+  height: 256px;
+}
+
+.tile path {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+  
+.tile .water-layer, .tile .river, .tile .stream, .tile .canal { fill: none; stroke: #9DD9D2; stroke-width: 1.5px; }
+.tile .water, .tile .ocean { fill: #9DD9D2; }
+.tile .riverbank { fill: #9DD9D2; }
+.tile .water_boundary, .tile .ocean_boundary, .tile .riverbank_boundary { fill: none; stroke: #93cbc4; stroke-width: 0.5px; }
+.tile .major_road { stroke: #fb7b7a; stroke-width: 1px; }
+.tile .minor_road { stroke: #999; stroke-width: 0.5px; }
+.tile .highway { stroke: #FA4A48; stroke-width: 1.5px; }
+.tile .buildings-layer { stroke: #987284; stroke-width: 0.15px; }
+.tile .park, .tile .nature_reserve, .tile .wood, .tile .protected_land { fill: #88D18A; stroke: #88D18A; stroke-width: 0.5px; }
+.tile .pier { fill: #fff; stroke: #fff; stroke-width: 0.5px; }
+.tile .rail { stroke: #503D3F; stroke-width: 0.5px; }
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+  
+.svgContainer {
+  position: absolute;
+  top: 400px;
+  left: 10px;
+  background-color: #fff;
+  opacity: 0.8;
+  z-index: 0;
+}
+  
+text.shadow {
+    stroke: white;
+    stroke-width: 4px;
+    opacity: 0.8;
+}
+  
+path.quake1, circle.quake1 {
+  fill: rgb(0, 255, 164);
+  fill-opacity: 0.6;
+  stroke: #000;
+}
+  
+.quake1:hover {
+    fill: purple;
+  }
+  
+path.quake2, circle.quake2 {
+  fill: rgb(63, 255, 0);
+  fill-opacity: 0.6;
+  stroke: #000;
+}
+  
+.quake2:hover {
+    fill: purple;
+  }
+  
+path.quake3, circle.quake3 {
+  fill: rgb(214, 245, 0);
+  fill-opacity: 0.6;
+  stroke: #000;
+}
+  
+.quake3:hover {
+    fill: purple;
+  }
+  
+path.quake4, circle.quake4 {
+  fill: rgb(255, 166, 0);
+  fill-opacity: 0.6;
+  stroke: #000;
+}
+  
+.quake4:hover {
+    fill: purple;
+  }
+  
+path.quake5, circle.quake5 {
+  fill: rgb(255, 97, 0);
+  fill-opacity: 0.6;
+  stroke: #000;
+}
+  
+.quake5:hover {
+    fill: purple;
+  }
+  
+path.quake6, circle.quake6 {
+  fill: rgb(200, 65, 65);
+  fill-opacity: 0.6;
+  stroke: #000;
+}
+  
+.quake6:hover {
+    fill: purple;
+  }
+  
+div.tooltip {   
+  position: absolute;     
+  text-align: left;
+  vertical-align: top;   
+  width: 275px;                  
+  height: 45px;                 
+  padding: 5px; 
+  color: #ffffff;          
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 50%;
+  background: #000;
+  box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4);
+  border: 2px;  
+  border-radius: 2px;  
+  z-index: 6;
+}
+  
+</style>
+<body>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="//d3js.org/d3-tile.v0.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.js"></script>
+<script>
+
+var pi = Math.PI,
+    tau = 2 * pi;
+
+var width = Math.max(960, window.innerWidth),
+    height = Math.max(500, window.innerHeight);
+
+// Initialize the projection to fit the world in a 1×1 square centered at the origin.
+var projection = d3.geoMercator()
+    .scale(1 / tau)
+    .translate([0, 0]);
+
+var path = d3.geoPath()
+    .projection(projection);
+
+var tile = d3.tile()
+    .size([width, height]);
+
+var tileProjection = d3.geoMercator();
+
+var tilePath = d3.geoPath()
+    .projection(tileProjection);
+  
+var zoom = d3.zoom()
+    .scaleExtent([1 << 20, 1 << 23])
+    .on("zoom", zoomed);
+  
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", mousemoved);
+  
+// Define the tooltip for hover-over info windows
+var div = d3.select("body").append("div")   
+  	.attr("class", "tooltip")               
+  	.style("opacity", 0);
+
+var vector1 = svg.append("g");
+  
+var vector2 = svg.append("g");
+  
+var vector3 = svg.append("g");
+
+var vector4 = svg.append("g");
+
+var vector5 = svg.append("g");
+
+var vector6 = svg.append("g");
+
+  
+var map = d3.select("body").append("div")
+    .attr("class", "map")
+    .style("width", width + "px")
+    .style("height", height + "px")
+    .on("mousemove", mousemoved);
+
+var layer = map.append("div")
+    .attr("class", "layer");
+
+var info = map.append("div")
+    .attr("class", "info");
+  
+svg.append('text')
+    .attr('x', width / 2)
+    .attr('y', "1.5em")
+    .style('font-size', '35px')
+    .style('text-anchor', 'middle')
+    .style("text-decoration", "underline")
+    .attr("class", "shadow") 
+    .text('The Geysers: Earthquakes in the Last Week');
+  
+svg.append('text')
+    .attr('x', width / 2)
+    .attr('y', "1.5em")
+    .style('font-size', '35px')
+    .style('text-anchor', 'middle')
+    .style("text-decoration", "underline")
+    .text('The Geysers: Earthquakes in the Last Week');
+
+// Create an Ordinal Legend          
+var ordinal = d3.scaleOrdinal()
+  .domain(["1.0 - 2.0", "2.0 - 3.0", "3.0 - 4.0", "4.0 - 5.0", "5.0 - 6.0", "6.0+"])
+  .range(["rgb(0, 255, 164)", "rgb(63, 255, 0)", "rgb(214, 245, 0)", "rgb(255, 166, 0)", "rgb(255, 97, 0)", "rgb(200, 65, 65)"]);
+  
+var svg2 = d3.select("svg").append("svg")
+  .attr('x', 0)
+  .attr('y', 400);
+  
+svg2.append("g")
+  .attr("class", "legendOrdinal")
+  .attr("transform", "translate(20,20)")
+  .attr("fill", "black")
+  .style("font-size", 19)
+  .attr("font-weight", "bold");
+  
+var legendOrdinal = d3.legendColor()
+  .shape("path", d3.symbol().type(d3.symbolSquare).size(450)())
+  .shapePadding(5)
+  .title("Magnitude")
+  .scale(ordinal);
+  
+svg.select(".legendOrdinal")
+  .call(legendOrdinal);
+  
+var svgContainer = d3.select("body").append("svg")
+  .attr("width", 125)
+  .attr("height", 190)
+  .style("border", "3px solid black")
+  .attr("class", "svgContainer");
+  
+var usgs = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+  
+d3.queue()
+    .defer(d3.json, usgs)
+    .await(ready);
+
+function ready(error, json) {
+  if (error) throw error;
+  
+  var quakes = json;
+  
+  var features1 = quakes.features.filter(function(d) {
+      return (d.properties.mag >= 1.0) && (d.properties.mag < 2.0)
+    });
+    
+  var features2 = quakes.features.filter(function(d) {
+      return (d.properties.mag >= 2.0) && (d.properties.mag < 3.0)
+    });
+  
+  var features3 = quakes.features.filter(function(d) {
+      return (d.properties.mag >= 3.0) && (d.properties.mag < 4.0)
+    });
+  
+  var features4 = quakes.features.filter(function(d) {
+      return (d.properties.mag >= 4.0) && (d.properties.mag < 5.0)
+    });
+  
+  var features5 = quakes.features.filter(function(d) {
+      return (d.properties.mag >= 5.0) && (d.properties.mag < 6.0)
+    });
+  
+  var features6 = quakes.features.filter(function(d) {
+      return (d.properties.mag >= 6.0)
+    });
+
+  
+  vector1 = vector1.selectAll("path.quake1")
+      .data(features1)
+    .enter().append("path")
+      .attr("class", "quake1");
+  
+  vector2 = vector2.selectAll("path.quake2")
+      .data(features2)
+    .enter().append("path")
+      .attr("class", "quake2");
+  
+  vector3 = vector3.selectAll("path.quake3")
+      .data(features3)
+    .enter().append("path")
+      .attr("class", "quake3");
+  
+  vector4 = vector4.selectAll("path.quake4")
+      .data(features4)
+    .enter().append("path")
+      .attr("class", "quake4");
+  
+  vector5 = vector5.selectAll("path.quake5")
+      .data(features5)
+    .enter().append("path")
+      .attr("class", "quake5");
+  
+  vector6 = vector6.selectAll("path.quake6")
+      .data(features6)
+    .enter().append("path")
+      .attr("class", "quake6");
+  
+  // Compute the projected initial center.
+  var center = projection([-122.7996, 38.8160]);
+  
+  // Apply a zoom transform equivalent to projection.{scale,translate,center}.
+  svg.call(zoom)
+    .call(zoom.transform, d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(1 << 20)
+        .translate(-center[0], -center[1]));
+  
+  map.call(zoom)
+    .call(zoom.transform, d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(1 << 20)
+        .translate(-center[0], -center[1]));
+  
+} 
+  
+function zoomed() {
+  var transform = d3.event.transform;
+
+  var tiles = tile
+      .scale(transform.k)
+      .translate([transform.x, transform.y])
+      ();
+
+  projection
+      .scale(transform.k / tau)
+      .translate([transform.x, transform.y]);
+  
+  vector1
+      .attr("d", path)
+      .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<font size = 2>" + "<u>" + "Mag:" + "</u>" + " " + d.properties.mag + "</font>" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Depth:" + "</u>" + " " + d.geometry.coordinates[2] + " km" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Location:" + "</u>" + " " + d.properties.place)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+  
+  vector2
+      .attr("d", path)
+      .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<font size = 2>" + "<u>" + "Mag:" + "</u>" + " " + d.properties.mag + "</font>" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Depth:" + "</u>" + " " + d.geometry.coordinates[2] + " km" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Location:" + "</u>" + " " + d.properties.place)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+  
+  vector3
+      .attr("d", path)
+      .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<font size = 2>" + "<u>" + "Mag:" + "</u>" + " " + d.properties.mag + "</font>" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Depth:" + "</u>" + " " + d.geometry.coordinates[2] + " km" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Location:" + "</u>" + " " + d.properties.place)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+
+  vector4
+      .attr("d", path)
+      .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<font size = 2>" + "<u>" + "Mag:" + "</u>" + " " + d.properties.mag + "</font>" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Depth:" + "</u>" + " " + d.geometry.coordinates[2] + " km" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Location:" + "</u>" + " " + d.properties.place)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+  
+  vector5
+      .attr("d", path)
+      .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<font size = 2>" + "<u>" + "Mag:" + "</u>" + " " + d.properties.mag + "</font>" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Depth:" + "</u>" + " " + d.geometry.coordinates[2] + " km" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Location:" + "</u>" + " " + d.properties.place)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+  
+  vector6
+      .attr("d", path)
+      .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
+            .style("opacity", .8)
+            .style("stroke", "black");
+          div.html("<font size = 2>" + "<u>" + "Mag:" + "</u>" + " " + d.properties.mag + "</font>" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Depth:" + "</u>" + " " + d.geometry.coordinates[2] + " km" + "<br/>" + "<br/>" + "<br/>" + "<u>" + "Location:" + "</u>" + " " + d.properties.place)
+            .style("left", (d3.event.pageX + 10) + "px")
+            .style("top", (d3.event.pageY - 30) + "px");
+        })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
+        });
+  
+  var image = layer
+      .style("transform", stringify(tiles.scale, tiles.translate))
+    .selectAll(".tile")
+    .data(tiles, function(d) { return d; });
+
+  image.exit()
+      .each(function(d) { this._xhr.abort(); })
+      .remove();
+
+  image.enter().append("svg")
+      .attr("class", "tile")
+      .style("left", function(d) { return d[0] * 256 + "px"; })
+      .style("top", function(d) { return d[1] * 256 + "px"; })
+      .each(window.renderTiles);
+  
+}
+  
+  
+
+var layers = ['water', 'landuse', 'roads', 'buildings'];
+  
+window.renderTiles = function(d) {
+    
+    var svg = d3.select(this);
+    var zoom = d[2];
+    
+    this._xhr = d3.json("https://tile.mapzen.com/mapzen/vector/v1/all/" + zoom + "/" + d[0] + "/" + d[1] + ".json?api_key=vector-tiles-LM25tq4", function(error, data) {
+      
+      var k = Math.pow(2, d[2]) * 256; // size of the world in pixels
+      
+      tilePath.projection()
+          .translate([k / 2 - d[0] * 256, k / 2 - d[1] * 256]) // [0°,0°] in pixels
+          .scale(k / 2 / Math.PI)
+          .precision(0);
+      
+      // build up a single concatenated array of all tile features from all tile layers
+      var features = [];
+      
+      layers.forEach(function(layer){
+        if(data[layer])
+        {
+            for(var i in data[layer].features)
+            {
+                // Don't include any label placement points
+                if(data[layer].features[i].properties.label_placement) { continue }
+                // Don't show large buildings at z13 or below.
+                if(zoom <= 13 && layer == 'buildings') { continue }
+                // Don't show small buildings at z14 or below.
+                if(zoom <= 14 && layer == 'buildings' && data[layer].features[i].properties.area < 2000) { continue }
+                data[layer].features[i].layer_name = layer;
+                features.push(data[layer].features[i]);
+            }
+        }
+      });
+      
+      // put all the features into SVG paths
+      svg.selectAll("path")
+        .data(features.sort(function(a, b) { return a.properties.sort_rank ? a.properties.sort_rank - b.properties.sort_rank : 0 }))
+      .enter().append("path")
+        .attr("class", function(d) { var kind = d.properties.kind || ''; if(d.properties.boundary){kind += '_boundary';} return d.layer_name + '-layer ' + kind; })
+        .attr("d", tilePath);
+    });
+  };
+  
+function stringify(scale, translate) {
+  var k = scale / 256, r = scale % 1 ? Number : Math.round;
+  return "matrix3d(" + [k, 0, 0, 0, 0, k, 0, 0, 0, 0, k, 0, r(translate[0] * scale), r(translate[1] * scale), 0, 1 ] + ")";
+}
+
+function mousemoved() {
+  info.text(formatLocation(projection.invert(d3.mouse(this)), d3.zoomTransform(this).k));
+}
+
+function formatLocation(p, k) {
+  var format = d3.format("." + Math.floor(Math.log(k) / 2 - 2) + "f");
+  return (p[1] < 0 ? format(-p[1]) + "°S" : format(p[1]) + "°N") + " "
+       + (p[0] < 0 ? format(-p[0]) + "°W" : format(p[0]) + "°E");
+}
+
+</script>
