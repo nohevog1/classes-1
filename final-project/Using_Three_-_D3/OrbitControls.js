@@ -662,37 +662,29 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		event.preventDefault();
 
-		switch ( event.button ) {
+		if ( event.button === scope.mouseButtons.ORBIT ) {
 
-			case scope.mouseButtons.ORBIT:
+			if ( scope.enableRotate === false ) return;
 
-				if ( scope.enableRotate === false ) return;
+			handleMouseDownRotate( event );
 
-				handleMouseDownRotate( event );
+			state = STATE.ROTATE;
 
-				state = STATE.ROTATE;
+		} else if ( event.button === scope.mouseButtons.ZOOM ) {
 
-				break;
+			if ( scope.enableZoom === false ) return;
 
-			case scope.mouseButtons.ZOOM:
+			handleMouseDownDolly( event );
 
-				if ( scope.enableZoom === false ) return;
+			state = STATE.DOLLY;
 
-				handleMouseDownDolly( event );
+		} else if ( event.button === scope.mouseButtons.PAN ) {
 
-				state = STATE.DOLLY;
+			if ( scope.enablePan === false ) return;
 
-				break;
+			handleMouseDownPan( event );
 
-			case scope.mouseButtons.PAN:
-
-				if ( scope.enablePan === false ) return;
-
-				handleMouseDownPan( event );
-
-				state = STATE.PAN;
-
-				break;
+			state = STATE.PAN;
 
 		}
 
@@ -713,31 +705,23 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		event.preventDefault();
 
-		switch ( state ) {
+		if ( state === STATE.ROTATE ) {
 
-			case STATE.ROTATE:
+			if ( scope.enableRotate === false ) return;
 
-				if ( scope.enableRotate === false ) return;
+			handleMouseMoveRotate( event );
 
-				handleMouseMoveRotate( event );
+		} else if ( state === STATE.DOLLY ) {
 
-				break;
+			if ( scope.enableZoom === false ) return;
 
-			case STATE.DOLLY:
+			handleMouseMoveDolly( event );
 
-				if ( scope.enableZoom === false ) return;
+		} else if ( state === STATE.PAN ) {
 
-				handleMouseMoveDolly( event );
+			if ( scope.enablePan === false ) return;
 
-				break;
-
-			case STATE.PAN:
-
-				if ( scope.enablePan === false ) return;
-
-				handleMouseMovePan( event );
-
-				break;
+			handleMouseMovePan( event );
 
 		}
 
