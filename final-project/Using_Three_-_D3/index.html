@@ -2,100 +2,102 @@
 <meta charset='utf-8'>
 <title>mars</title>
 <style>
-
 body {
   /* set margin to 0 and overflow to hidden, to go fullscreen */
   margin: 0;
   overflow: hidden;
 }
-
 </style>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
 <script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/three.js"></script>
 <script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/OrbitControls.js"></script>
 <script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/dat.gui.min.js"></script>
 <script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/stats.min.js"></script>
 <body>
 <script>
-
 var renderer, scene, camera;
-
 var control;
 var stats;
 var cameraControl;
-
+var radius = 15;
 // Initialize the scene, camera and objects.
 function init() {
-
   // To display anything, you need 3 things: (1) Scene, (2) Camera, (3) Renderer
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
   renderer = new THREE.WebGLRenderer();
-
   renderer.setClearColor(0x000000, 1.0);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMapEnabled = true;
-
   // Mars needs (1) geometry, (2) material, (3) mesh
   var sphereGeometry = new THREE.SphereGeometry(15, 60, 60);
   var sphereMaterial = createMarsMaterial();
   var marsMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
   marsMesh.name = 'mars';
   scene.add(marsMesh);
-
   // position and point the camera to the center of the scene
   camera.position.x = 25;
   camera.position.y = 26;
   camera.position.z = 23;
   camera.lookAt(scene.position);
-
   // add controls
   cameraControl = new THREE.OrbitControls(camera);
-
   // setup the control object for the control gui
   control = new function () {
     this.rotationSpeed = 0.001;
   };
-
   // add extras
   addControlGui(control);
   addStatsObject();
-
   // add the output of the renderer to the html element
   document.body.appendChild(renderer.domElement);
+  
+  // add a star field
+  var starsGeometry = new THREE.Geometry();
 
+  for ( var i = 0; i < 10000; i ++ ) {
+
+    var star = new THREE.Vector3();
+    star.x = THREE.Math.randFloatSpread( 2000 );
+    star.y = THREE.Math.randFloatSpread( 2000 );
+    star.z = THREE.Math.randFloatSpread( 2000 );
+
+    starsGeometry.vertices.push( star )
+
+  }
+
+  var starsMaterial = new THREE.PointsMaterial( { color: 0x888888 } )
+
+  var starField = new THREE.Points( starsGeometry, starsMaterial );
+
+  scene.add( starField );
+  
   // start animating
   render();
 }
-
 function createMarsMaterial() {
   // 4096 is the maximum width for maps  
   var marsTexture = THREE.ImageUtils;
   marsTexture.crossOrigin = "";
   
   marsTexture = THREE.ImageUtils.loadTexture("https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/mars.jpg");
-
   var marsMaterial = new THREE.MeshBasicMaterial();
   marsMaterial.map = marsTexture;
-
   return marsMaterial;
 }
-
 function addControlGui(controlObject) {
   var gui = new dat.GUI();
   gui.add(controlObject, 'rotationSpeed', -0.01, 0.01);
 }
-
 function addStatsObject() {
   stats = new Stats();
   stats.setMode(0);
-
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.left = '0px';
   stats.domElement.style.top = '0px';
-
   document.body.appendChild(stats.domElement);
 }
-
 function render() {
   stats.update();
   cameraControl.update();
@@ -103,14 +105,73 @@ function render() {
   renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
-
 function handleResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
-
 window.onload = init;
 window.addEventListener('resize', handleResize, false);
+  
+d3.json("https://tatornator12.github.io/classes/final-project/Mars_LandingSites.json", function(error, topology) {
+  if (error) throw error;
+  scene.add(mesh = wireframe(topojson.feature(topology, topology.features).features, new THREE.PointsMaterial({color: 0xff0000})));
+  d3.timer(function(t) {
+    graticule.rotation.x = mesh.rotation.x = Math.sin(t / 11000) * Math.PI / 3 - Math.PI / 2;
+    graticule.rotation.z = mesh.rotation.z = t / 10000;
+    renderer.render(scene, camera);
+  });
+});
 
+// Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
+function vertex(point) {
+  var lambda = point[0] * Math.PI / 180,
+      phi = point[1] * Math.PI / 180,
+      cosPhi = Math.cos(phi);
+  return new THREE.Vector3(
+    radius * cosPhi * Math.cos(lambda),
+    radius * cosPhi * Math.sin(lambda),
+    radius * Math.sin(phi)
+  );
+}
+
+// Converts a GeoJSON MultiLineString in spherical coordinates to a THREE.LineSegments.
+function wireframe(multipoint, material) {
+  var geometry = new THREE.Geometry;
+  multipoint.coordinates.forEach(function(point) {
+    d3.pairs(point.map(vertex), function(a, b) {
+      geometry.vertices.push(a, b);
+    });
+  });
+  return new THREE.Points(geometry, material);
+}
+
+// See https://github.com/d3/d3-geo/issues/95
+ function graticule10() {
+  var epsilon = 1e-6,
+      x1 = 180, x0 = -x1, y1 = 80, y0 = -y1, dx = 10, dy = 10,
+      X1 = 180, X0 = -X1, Y1 = 90, Y0 = -Y1, DX = 90, DY = 360,
+      x = graticuleX(y0, y1, 2.5), y = graticuleY(x0, x1, 2.5),
+      X = graticuleX(Y0, Y1, 2.5), Y = graticuleY(X0, X1, 2.5);
+
+  function graticuleX(y0, y1, dy) {
+    var y = d3.range(y0, y1 - epsilon, dy).concat(y1);
+    return function(x) { return y.map(function(y) { return [x, y]; }); };
+  }
+
+  function graticuleY(x0, x1, dx) {
+    var x = d3.range(x0, x1 - epsilon, dx).concat(x1);
+    return function(y) { return x.map(function(x) { return [x, y]; }); };
+  }
+ 
+  return {
+    type: "MultiPoint",
+    coordinates: d3.range(Math.ceil(X0 / DX) * DX, X1, DX).map(X)
+        .concat(d3.range(Math.ceil(Y0 / DY) * DY, Y1, DY).map(Y))
+        .concat(d3.range(Math.ceil(x0 / dx) * dx, x1, dx).filter(function(x) { return Math.abs(x % DX) > epsilon; }).map(x))
+        .concat(d3.range(Math.ceil(y0 / dy) * dy, y1 + epsilon, dy).filter(function(y) { return Math.abs(y % DY) > epsilon; }).map(y))
+  };
+} 
+  
+  
 </script>
