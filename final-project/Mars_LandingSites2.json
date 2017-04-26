@@ -6,12 +6,12 @@
       "id" : 0,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             -158.09429997544871,
             -45.041900049539777
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 0,
@@ -31,12 +31,12 @@
       "id" : 1,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             -19.452799942045658,
             -23.920299959309517
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 1,
@@ -56,12 +56,12 @@
       "id" : 2,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             -47.950700055273302,
             22.457088414234988
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 2,
@@ -81,12 +81,12 @@
       "id" : 3,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             133.73899999829803,
             47.932541383284274
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 3,
@@ -106,12 +106,12 @@
       "id" : 4,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             -33.252799950893234,
             19.260767168212197
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 4,
@@ -131,12 +131,12 @@
       "id" : 5,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             175.47290004390231,
             -14.569200049070162
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 5,
@@ -156,12 +156,12 @@
       "id" : 6,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             -5.5265999406482251,
             -1.9461999377002712
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 6,
@@ -181,12 +181,12 @@
       "id" : 7,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             -125.74922203656644,
             68.218830003656961
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 7,
@@ -206,12 +206,12 @@
       "id" : 8,
       "geometry" : {
         "type" : "Point",
-        "coordinates" : [
+        "coordinates" : 
           [
             137.43999999999997,
             -4.590000000000015
           ]
-        ]
+        
       },
       "properties" : {
         "FID" : 8,
