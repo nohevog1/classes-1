@@ -8,7 +8,7 @@
         "type" : "Point",
         "coordinates" : 
           [
-            40.09429997544871,
+            47.09429997544871,
             -45.041900049539777
           ]
         
@@ -16,8 +16,8 @@
       "properties" : {
         "FID" : 0,
         "ID" : 1,
-        "NAME" : "Mars 2",
-        "X_COORD" : 40.09429997544871,
+        "NAME" : "Mars 2 (Failed Mission)",
+        "X_COORD" : 47.09429997544871,
         "Y_COORD" : -45.041899999999998,
         "FULL_NAME" : "Mars 2 Landing Site",
         "NSSDC_ID" : "1971-045A",
@@ -241,7 +241,7 @@
       "properties" : {
         "FID" : 9,
         "ID" : 9,
-        "NAME" : "Mars 3",
+        "NAME" : "Mars 3 (Failed Mission)",
         "X_COORD" : -158.0943,
         "Y_COORD" : -45.041899999999998,
         "FULL_NAME" : "Mars 3 Landing Site",
@@ -249,6 +249,56 @@
         "WEB_LINK" : "https://nssdc.gsfc.nasa.gov/nmc/spacecraftDisplay.do?id=1971-049A",
         "COUNTRY" : "Russian",
         "YEAR" : 1971
+      }
+    },
+ {
+      "type" : "Feature",
+      "id" : 10,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : 
+          [
+            90,
+            10.6
+          ]
+        
+      },
+      "properties" : {
+        "FID" : 10,
+        "ID" : 10,
+        "NAME" : "Beagle 2 (Failed Mission)",
+        "X_COORD" : 90,
+        "Y_COORD" : 10.6,
+        "FULL_NAME" : "Beagle 2 Landing Site",
+        "NSSDC_ID" : "2003-022C",
+        "WEB_LINK" : "https://nssdc.gsfc.nasa.gov/nmc/spacecraftDisplay.do?id=2003-022C",
+        "COUNTRY" : "European Space Agency",
+        "YEAR" : 2003
+      }
+    },
+ {
+      "type" : "Feature",
+      "id" : 11,
+      "geometry" : {
+        "type" : "Point",
+        "coordinates" : 
+          [
+            165.2,
+            -76.57
+          ]
+        
+      },
+      "properties" : {
+        "FID" : 11,
+        "ID" : 11,
+        "NAME" : "Mars Polar Lander (Failed Mission)",
+        "X_COORD" : 165.2,
+        "Y_COORD" : -76.57,
+        "FULL_NAME" : "Mars Polar Lander Landing Site",
+        "NSSDC_ID" : "1999-001A",
+        "WEB_LINK" : "https://nssdc.gsfc.nasa.gov/nmc/spacecraftDisplay.do?id=1999-001A",
+        "COUNTRY" : "United States",
+        "YEAR" : 1999
       }
     }
   ]
