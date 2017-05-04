@@ -23,7 +23,6 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
         * Converted from a Shapefile to GeoJSON
         * Updated additions (Mars 3, Beagle 2, and Mars Polar Lander) of failed mission from [Planetary.org](http://www.planetary.org/multimedia/space-images/charts/mars_landing_site_map_lakdawalla.html)
 
-
 ## Gist Links
 
 1. D3.js-only Version: https://gist.github.com/tatornator12/b486e2fef1039cdcc321c4c1fbdf329a
