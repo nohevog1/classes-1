@@ -22,6 +22,9 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
       * Landing Sites - [USGS - PIGWAD (deprecated)](ftp://pdsimage2.wr.usgs.gov/pub/pigpen/mars/Nomenclature/)
         * Converted from a Shapefile to GeoJSON
         * Updated additions (Mars 3, Beagle 2, and Mars Polar Lander) of failed missions from [Planetary.org](http://www.planetary.org/multimedia/space-images/charts/mars_landing_site_map_lakdawalla.html)
+        
+   * D3.js
+      * Versor.js from Mike Bostock's [Versor Dragging](https://bl.ocks.org/mbostock/7ea1dde508cec6d2d95306f92642bc42)
 
 ## Gist Links
 
