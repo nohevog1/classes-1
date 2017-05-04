@@ -17,7 +17,7 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
 2. Attribution:
 
    * Data Sources
-      * Basemap of Mars (Viking MDIM2.1 Colorized Global Mosaic 232m) - USGS: https://astrogeology.usgs.gov/search/map/Mars/Viking/MDIM21/Mars_Viking_MDIM21_ClrMosaic_global_232m
+      * Basemap of Mars (Viking MDIM2.1 Colorized Global Mosaic 232m) - [USGS](https://astrogeology.usgs.gov/search/map/Mars/Viking/MDIM21/Mars_Viking_MDIM21_ClrMosaic_global_232m)
 
 
 ## Gist Links
