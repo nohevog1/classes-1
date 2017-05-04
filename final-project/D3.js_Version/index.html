@@ -2,7 +2,6 @@
 <meta charset="utf-8">
 <title>Final Project</title>
 <style>
-
 body {
     margin: 0;
   }
@@ -50,14 +49,13 @@ div.tooltip {
 <body>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
-  <script src="https://tatornator12.github.io/classes/final-project/versor.js"></script>
+  <script src="https://tatornator12.github.io/classes/final-project/D3.js_Version/JavaScript/versor.js"></script>
 <script>
   
 var width = 1000, //Math.max(1000, window.innerWidth),
     height = 500; //Math.max(500, window.innerHeight);
   
 var transform = d3.zoomIdentity;
-
   
 // Append the canvas element to the container div
 var canvas = d3.select("body").append("canvas")
@@ -122,7 +120,6 @@ function zoomed() {
   svg.selectAll("path")
       .attr("transform", transform);
 }
-
   
 // Create a render for projection rotation
 var render = function() {},
@@ -135,7 +132,6 @@ var render2 = function() {},
     v0, // Mouse position in Cartesian coordinates at start of drag gesture.
     r0, // Projection rotation as Euler angles at start.
     q0; // Projection rotation as versor at start.
-
 // Create a drag start function that refers to the versor.js library
 function dragstarted() {
     v0 = versor.cartesian(orthographic.invert(d3.mouse(this)));
@@ -149,7 +145,6 @@ function dragstarted() {
    d3.selectAll("path")
      .attr("d", path);
   }
-
 // Create a dragged function that refers to the versor.js library
 function dragged() {
     var v1 = versor.cartesian(orthographic.rotate(r0).invert(d3.mouse(this))),
@@ -169,15 +164,13 @@ function dragged() {
   
 // Set the source of the GeoJSON
 // These are landing coordinates for "successful" landers on Mars
-var Landing_Sites = "https://tatornator12.github.io/classes/final-project/Mars_LandingSites.json";
-
+var Landing_Sites = "https://tatornator12.github.io/classes/final-project/D3.js_Version/Data/Mars_LandingSites.json";
 // Plot the landing sites
 d3.json(Landing_Sites, function plotSites(error, json) {
   if (error) throw error;
       
   //Set the second render on the orthographic projection of the SVG data points
   render2 = function() {
-
     var sites = json.features;
     
     svg.selectAll("path")
@@ -207,17 +200,14 @@ d3.json(Landing_Sites, function plotSites(error, json) {
 var image = new Image(width, height);
 image.crossOrigin = "Anonymous";
 image.onload = onLoad;
-image.src = 'https://tatornator12.github.io/classes/final-project/32908689360_24792ca036_k.jpg';
+image.src = 'https://tatornator12.github.io/classes/final-project/D3.js_Version/Images/mars.jpg';
     
 // Copy the image to the canvas context
 function onLoad() {
-
     // Copy the image to the canvas area
     context.drawImage(image, 0, 0, image.width, image.height);
-
     // Reads the source image data from the canvas context
     var sourceData = context.getImageData(0, 0, image.width, image.height).data;
-
     // Creates an empty target image and gets its data
     var target = context.createImageData(image.width, image.height),
         targetData = target.data;
@@ -228,10 +218,8 @@ function onLoad() {
       // Iterate in the target image
       for (var x = 0, w = image.width; x < w; x += 1) {
         for (var y = 0, h = image.height; y < h; y += 1) {
-
             // Compute the geographic coordinates of the current pixel
             var coords = orthographic.invert([x, y]);
-
          
             if ( (Math.abs(x - orthographic(coords)[0]) < 0.5 ) && (Math.abs(y - orthographic(coords)[1]) < 0.5 ) ) {
                 
@@ -239,17 +227,13 @@ function onLoad() {
               var targetIndex,
                   sourceIndex,
                   pixels;
-
               // Check if the inverse projection is defined
               if ((!isNaN(coords[0])) && (!isNaN(coords[1]))) {
-
                   // Compute the source pixel coordinates
                   pixels = equirectangular(coords);
-
                   // Compute the index of the red channel
                   sourceIndex = 4 * (Math.floor(pixels[0]) + w * Math.floor(pixels[1]));
                   sourceIndex = sourceIndex - (sourceIndex % 4);
-
                   targetIndex = 4 * (x + w * y);
                   targetIndex = targetIndex - (targetIndex % 4);
           
@@ -262,7 +246,6 @@ function onLoad() {
             }
           
           }
-
      }
   
       
