@@ -16,7 +16,7 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
 
 2. Attribution (Data Sources):
 
-* 
+    * 
 
 
 ## Gist Links
