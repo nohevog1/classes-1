@@ -23,8 +23,12 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
         * Converted from a Shapefile to GeoJSON
         * Updated additions (Mars 3, Beagle 2, and Mars Polar Lander) of failed missions from [Planetary.org](http://www.planetary.org/multimedia/space-images/charts/mars_landing_site_map_lakdawalla.html)
         
-   * D3.js
+   * D3.js Version
       * Versor.js from Mike Bostock's [Versor Dragging](https://bl.ocks.org/mbostock/7ea1dde508cec6d2d95306f92642bc42)
+      
+   * Three.js Version
+      * Title font and layout inspired by [100,000 Stars](https://www.chromeexperiments.com/experiment/100000-stars)
+      * Atmosphere Shader from [Stemkoski](https://github.com/stemkoski/stemkoski.github.com/blob/master/Three.js/Shader-Halo.html)
 
 ## Gist Links
 
