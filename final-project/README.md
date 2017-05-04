@@ -29,6 +29,9 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
    * Three.js Version
       * Title font and layout inspired by [100,000 Stars](https://www.chromeexperiments.com/experiment/100000-stars)
       * Atmosphere Shader from [Stemkoski](https://github.com/stemkoski/stemkoski.github.com/blob/master/Three.js/Shader-Halo.html)
+      * Starfield from [Threejs.org](https://threejs.org/docs/index.html#api/materials/PointsMaterial)
+      * D3 GeoJSON from Mike Bostock's [GoeJSON in Three.js](https://bl.ocks.org/mbostock/2b85250396c17a79155302f91ec21224)
+      * MouseOver Event from [Stemkoski](https://github.com/stemkoski/stemkoski.github.com/blob/master/Three.js/Mouse-Over.html)
 
 ## Gist Links
 
