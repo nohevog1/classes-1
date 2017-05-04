@@ -1,0 +1,3 @@
+# JavaScript Files
+
+* Versor.js
