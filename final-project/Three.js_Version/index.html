@@ -68,10 +68,10 @@ div.tooltip {
  
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/topojson.v2.min.js"></script>
-<script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/three.js"></script>
-<script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/OrbitControls.js"></script>
-<script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/dat.gui.min.js"></script>
-<script src="https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/stats.min.js"></script>
+<script src="https://tatornator12.github.io/classes/final-project/Three.js_Version/JavaScript/three.js"></script>
+<script src="https://tatornator12.github.io/classes/final-project/Three.js_Version/JavaScript/OrbitControls.js"></script>
+<script src="https://tatornator12.github.io/classes/final-project/Three.js_Version/JavaScript/dat.gui.min.js"></script>
+<script src="https://tatornator12.github.io/classes/final-project/Three.js_Version/JavaScript/stats.min.js"></script>
 
 <!-- ---------------- Custom Shader Code ------------------------ -->
 <script id="vertexShader" type="x-shader/x-vertex">
@@ -133,44 +133,44 @@ function init() {
   marsMesh.name = 'mars';
   scene.add(marsMesh);
   
-  // position and point the camera to the center of the scene
+  // Position and point the camera to the center of the scene
   camera.position.x = 25;
   camera.position.y = 26;
   camera.position.z = 30;
   camera.lookAt(scene.position);
   
-  // add controls
+  // Add controls
   cameraControl = new THREE.OrbitControls(camera);
   
-  // setup the control object for the control gui
+  // Setup the control object for the control GUI
   control = new function () {
     this.rotationSpeed = 0.001;
   };
   
-  // add extras
+  // Add extras
   addControlGui(control);
   addStatsObject();
   
-  // add the output of the renderer to the html element
+  // Add the output of the renderer to the html element
   document.body.appendChild(renderer.domElement);
   
-  // create custom material from the shader code above
-	//   that is within specially labeled script tags
+  // Create custom material from the shader code above
+	// that is within specially labeled script tags
 	var customMaterial = new THREE.ShaderMaterial( 
 	{
-	    uniforms: {  },
-		vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
-		fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+	  uniforms: {  },
+    vertexShader:   document.getElementById( 'vertexShader'   ).textContent,
+    fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
 		side: THREE.BackSide,
 		blending: THREE.AdditiveBlending,
 		transparent: true
-	}   );
+	});
 		
 	var ballGeometry = new THREE.SphereGeometry( 18, 50, 50 );
 	var ball = new THREE.Mesh( ballGeometry, customMaterial );
 	scene.add( ball );
   
-  // add a star field
+  // Add a star field
   var starsGeometry = new THREE.Geometry();
   for ( var i = 0; i < 10000; i ++ ) {
     var star = new THREE.Vector3();
@@ -182,29 +182,33 @@ function init() {
   var starsMaterial = new THREE.PointsMaterial( { color: 0xF9F9CF } )
   var starField = new THREE.Points( starsGeometry, starsMaterial );
   scene.add( starField );
-  // start animating
+  
+  // Start animating
   render();
   
 } 
-  
+
+// Create the basemap of Mars
 function createMarsMaterial() {
   
   // 4096 is the maximum width for maps  
   var marsTexture = THREE.ImageUtils;
   marsTexture.crossOrigin = "";
   
-  marsTexture = THREE.ImageUtils.loadTexture("https://tatornator12.github.io/classes/final-project/Using_Three_-_D3/mars.jpg");
+  marsTexture = THREE.ImageUtils.loadTexture("https://tatornator12.github.io/classes/final-project/Three.js_Version/Images/mars.jpg");
   var marsMaterial = new THREE.MeshBasicMaterial();
   marsMaterial.map = marsTexture;
   return marsMaterial;
 }
+
   
+// Add a control GUI function for the rotation speed
 function addControlGui(controlObject) {
-  
   var gui = new dat.GUI();
   gui.add(controlObject, 'rotationSpeed', -0.01, 0.01);
 }
   
+// Add a stats monitor function
 function addStatsObject() {
   stats = new Stats();
   stats.setMode(0);
@@ -213,7 +217,8 @@ function addStatsObject() {
   stats.domElement.style.top = '0px';
   document.body.appendChild(stats.domElement);
 }
-  
+
+// Render the scene
 function render() {
   stats.update();
   cameraControl.update();
@@ -222,7 +227,8 @@ function render() {
   renderer.render(scene, camera);
   requestAnimationFrame(render);
 }
-  
+
+// Window resize function
 function handleResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -233,12 +239,12 @@ window.onload = init;
 window.addEventListener('resize', handleResize, false);
 window.addEventListener( 'mousemove', onMouseMove, false );
   
- 
-var Landing_Sites = "https://tatornator12.github.io/classes/final-project/Mars_LandingSites2.json";
+// Add the JSON data using D3.js
+var Landing_Sites = "https://tatornator12.github.io/classes/final-project/Three.js_Version/Data/Mars_LandingSites2.json";
   
 d3.queue()
-    .defer(d3.json, Landing_Sites)
-    .await(ready);
+  .defer(d3.json, Landing_Sites)
+  .await(ready);
   
 function ready(error, json) {
   if (error) throw error;
@@ -256,74 +262,97 @@ function vertex(point) {
   return new THREE.Vector3(
     radius * cosPhi * Math.cos(lambda),
     radius * Math.sin(phi),
-   - radius * cosPhi * Math.sin(lambda)
+    - radius * cosPhi * Math.sin(lambda)
   );
 }
+ 
+// Create the dot feature for the landing sites JSON
 function createDot(feature) {
   
   var landingSitesGeometry = new THREE.Geometry();
   var position = vertex(feature.geometry.coordinates);
   landingSitesGeometry.vertices.push( position );
-  var landingSitesMaterial = new THREE.PointsMaterial({ size: 1.5, color: 0xff0000, map: THREE.ImageUtils.loadTexture("https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/sprites/disc.png"), transparent: true });
- var dot = new THREE.Points(landingSitesGeometry, landingSitesMaterial);
+  
+  var landingSitesMaterial = new THREE.PointsMaterial({ size: 1.5, color: 0xff0000, map: THREE.ImageUtils.loadTexture("https://tatornator12.github.io/classes/final-project/Three.js_Version/Images/disc.png"), transparent: true });
+  
+  var dot = new THREE.Points(landingSitesGeometry, landingSitesMaterial);
+  
   dot.name = "<img style='height: 270px; width: 280px; object-fit:contain' src=\'" + feature.properties.IMAGE + "'>" + "<br>" + "<font size='4'>" + feature.properties.NAME + "</font><br>" + feature.properties.COUNTRY + ", " + feature.properties.YEAR
            + "<br><a href=\'" + feature.properties.WEB_LINK + "' target='_blank'>" + "More Info" + "</a>";
+  
   dot.position.set(position.x, position.y, position.z);
+  
+  // Creates a bounding sphere for mouse detection
+  // in the MouseOver event
   dot.geometry.boundingSphere = new THREE.Sphere();
   dot.geometry.boundingSphere.center.x = position.x;
   dot.geometry.boundingSphere.center.y = position.y;
   dot.geometry.boundingSphere.center.z = position.z;
   dot.geometry.boundingSphere.radius = .75;
+  
   return dot;
 }
   
-  function onMouseMove( event ) {
-	// calculate mouse position in normalized device coordinates
-	// (-1 to +1) for both components
+// Create the MouseOver event
+function onMouseMove( event ) {
   
+	// Calculate mouse position in normalized device coordinates
+	// (-1 to +1) for both components
   event.preventDefault();
 	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-   // update the picking ray with the camera and mouse position
+  
+  // Update the picking ray with the camera and mouse position
 	raycaster.setFromCamera( mouse, camera );
   
     
-  // calculate objects intersecting the picking ray
+  // Calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children[3].children );
-  // if there is one (or more) intersections
+  
+  // If there is one (or more) intersections
   if ( intersects.length > 0 )
   {
-    // if the closest object intersected is not the currently stored intersection object
+    
+    // If the closest object intersected is not the currently stored intersection object
     if ( intersects[ 0 ].object != INTERSECTED )
     {
-        // restore previous intersection object (if it exists) to its original color
+      
+        // Restore previous intersection object (if it exists) to its original color
         if ( INTERSECTED )
             INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-        // store reference to closest object as current intersection object
+      
+        // Store reference to closest object as current intersection object
         INTERSECTED = intersects[ 0 ].object;
-        // store color of closest object (for later restoration)
+      
+        // Store color of closest object (for later restoration)
         INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-        // set a new color for closest object
+      
+        // Set a new color for closest object
         INTERSECTED.material.color.setHex( 0x00ff00 );
-  
-          div
-            .html(INTERSECTED.name)
-          .transition()
-            .duration(200)
-            .style("opacity", .8)
-            .style("stroke", "black")
+          
+        // Add referenced JSON data to the div element
+        // and style the transition
+        div
+          .html(INTERSECTED.name)
+        .transition()
+          .duration(200)
+          .style("opacity", .8)
+          .style("stroke", "black")
     }
   }
-  else // there are no intersections
+  else // There are no intersections
   {
  	 
-    // restore previous intersection object (if it exists) to its original color
+    // Restore previous intersection object (if it exists) to its original color
     if ( INTERSECTED )
+      
         INTERSECTED.material.color.setHex( INTERSECTED.currentHex );
-    // remove previous intersection object reference
-    //     by setting current intersection object to "nothing"
-    INTERSECTED = null;
     
+        // Remove previous intersection object reference
+        // by setting current intersection object to "nothing"
+        INTERSECTED = null;
+    
+        // Style the div element's transition
         div.transition()
            .delay(1000)
            .duration(400)
