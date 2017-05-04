@@ -17,7 +17,11 @@ Three.js Version Project Site: https://tatornator12.github.io/classes/final-proj
 2. Attribution:
 
    * Data Sources
-      * Basemap of Mars (Viking MDIM2.1 Colorized Global Mosaic 232m) - [USGS](https://astrogeology.usgs.gov/search/map/Mars/Viking/MDIM21/Mars_Viking_MDIM21_ClrMosaic_global_232m)
+      * Basemap of Mars - [USGS](https://astrogeology.usgs.gov/search/map/Mars/Viking/MDIM21/Mars_Viking_MDIM21_ClrMosaic_global_232m)
+        * Viking MDIM2.1 Colorized Global Mosaic 232m
+      * Landing Sites - [USGS - PIGWAD (deprecated)](ftp://pdsimage2.wr.usgs.gov/pub/pigpen/mars/Nomenclature/)
+        * Converted from a Shapefile to GeoJSON
+        * Updated additions (Mars 3, Beagle 2, and Mars Polar Lander) of failed mission from [Planetary.org](http://www.planetary.org/multimedia/space-images/charts/mars_landing_site_map_lakdawalla.html)
 
 
 ## Gist Links
