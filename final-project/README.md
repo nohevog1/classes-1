@@ -2,7 +2,7 @@
 
 This project presents an interactive globe of Mars as well as the location of landing sites of Mars landers and additional information about those sites using two different JavaScript libraries: D3.js and Three.js.
 
-#### Project Links
+## Project Links
 
 Project Repository: https://github.com/tatornator12/classes/tree/master/final-project
 
