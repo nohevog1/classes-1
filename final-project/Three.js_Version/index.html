@@ -141,6 +141,8 @@ function init() {
   
   // Add controls
   cameraControl = new THREE.OrbitControls(camera);
+  cameraControl.minDistance = 20;
+  cameraControl.maxDistance = 70;
   
   // Setup the control object for the control GUI
   control = new function () {
